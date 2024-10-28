@@ -1,9 +1,11 @@
 name: Build CMake
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
-      - main # Adjust as necessary
+      - master
   pull_request:
 
 jobs:
