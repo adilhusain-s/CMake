@@ -1,0 +1,36 @@
+name: CMake Build with  script
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-22.04-ppc64le]
+
+    steps:
+      - name: Checkout CMake code
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x ./cmake-build.sh
+
+      - name: Run cmake-build.sh script
+        run: ./cmake-build.sh
+
+      - name: Upload log files
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmake-logs
+          path: |
+            setup.log
+            build.log
+            bootstrap.log
+            install.log
+            verify.log
