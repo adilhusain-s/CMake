@@ -49,7 +49,7 @@ jobs:
           cat verify.log  # Optional: display the output in the workflow logs
 
       - name: Upload log files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cmake-logs
           path: |
