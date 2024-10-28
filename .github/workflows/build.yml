@@ -1,0 +1,47 @@
+name: Build CMake
+
+on:
+  push:
+    branches:
+      - main # Adjust as necessary
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-22.04-ppc64le]
+
+    steps:
+      - name: Checkout CMake code
+        uses: actions/checkout@v2
+
+      - name: Set up environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git
+
+      - name: Create build directory
+        run: |
+          mkdir -p build
+          cd build
+
+      - name: Bootstrap CMake
+        run: |
+          cd build
+          ../bootstrap
+
+      - name: Build CMake
+        run: |
+          cd build
+          make
+
+      - name: Install CMake
+        run: |
+          cd build
+          sudo make install
+
+      - name: Verify CMake installation
+        run: |
+          cmake --version
