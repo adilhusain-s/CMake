@@ -1,0 +1,61 @@
+name: Build CMake
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-22.04-ppc64le]
+
+    steps:
+      - name: Checkout CMake code
+        uses: actions/checkout@v4
+
+      - name: Set up environment
+        run: |
+          sudo apt-get update >> setup.log 2>&1
+          sudo apt-get install -y build-essential git >> setup.log 2>&1
+
+      - name: Create build directory
+        run: |
+          mkdir -p build >> build.log 2>&1
+          cd build
+
+      - name: Bootstrap CMake
+        run: |
+          cd build
+          ../bootstrap >> bootstrap.log 2>&1
+
+      - name: Build CMake
+        run: |
+          cd build
+          make >> build.log 2>&1
+
+      - name: Install CMake
+        run: |
+          cd build
+          sudo make install >> install.log 2>&1
+
+      - name: Verify CMake installation
+        run: |
+          cmake --version >> verify.log 2>&1
+          cat verify.log  # Optional: display the output in the workflow logs
+
+      - name: Upload log files
+        uses: actions/upload-artifact@v3
+        with:
+          name: cmake-logs
+          path: |
+            setup.log
+            build.log
+            bootstrap.log
+            install.log
+            verify.log
+
