@@ -27,7 +27,7 @@ jobs:
       - name: Upload log files
         uses: actions/upload-artifact@v4
         with:
-          name: cmake-logs
+          name: cmake-logs-${{ github.sha }}
           path: |
             setup.log
             build.log
